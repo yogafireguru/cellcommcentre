@@ -3,7 +3,7 @@
 Welcome to the CommunityPlatform To Collaborate With Cells !
 We are building a new platform to help unite people and contribute to UN SDG Agenda. The Sustainable Development Goals are the blueprint to achieve a better and more sustainable future for all. They address the global challenges we face, including those related to poverty, inequality, climate, environmental degradation, prosperity,and peace and justice. The Goals interconnect and in order to leave no one behind, it ís important that we achieve each Goal and target by 2030.
 
-This is a platform to connect, educate and empower our global community to solve greatest challenges. Together as part of cell network. Its world first open source scalable platform which brings everyone working on UN SDG on a single platform aligned to a commom framework. Check out more at [www.yogafire.guru](www.yogafire.guru/solution)
+This is a platform to connect, educate and empower our global community to solve greatest challenges. Together as part of cell network. Its world first open source scalable platform which brings everyone working on UN SDG on a single platform aligned to a commom framework. Check out more at www.yogafire.guru/solution
 
 ## 👀 &nbsp; Why Cell Network
 
@@ -14,7 +14,14 @@ For the past 1 year we’ve explored solutions from all over the world on open h
 - Solution exists but people don't know about it and can't use those
 - Its a 4 Step process which we have outlined
 
-Resistance Army aims to tackle these problems by creating a strong unified community for the different projects under its umbrella and offering the necessary tools to collaborate and connect in one single place. Free and opensource.
+At YogaFire we aim to tackle these problems holistically by following a standard 4 stage process powered by a strong unified community for the different projects under its umbrella and offering the necessary tools to collaborate and connect in one single place. Free and opensource.
+
+4 Steps are
+
+1) Awareness
+2) Build Skills
+3) Community Network (This platform is enabler for this Step)
+4) Cell Network
 
 ## ⚡️ &nbsp; What is Cell Network
 
