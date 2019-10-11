@@ -10,11 +10,10 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import ReCAPTCHA from 'react-google-recaptcha';
-import GoogleAuth from './GoogleAuth';
+//import GoogleAuth from './GoogleAuth';
 
 import { connect } from 'react-redux';
 import { signInEmail } from '../../actions';
-//import history from '../../history';
 
 class Login extends React.Component {
 
@@ -35,7 +34,6 @@ constructor(props, ...args) {
 
     if((this.props.currentUser!==prevProps.currentUser) || (this.props.error!== prevProps.error))
     {
-        //let {error, currentUser} = this.props;
         let {error} = this.props;
 
         if(error){
@@ -45,9 +43,7 @@ constructor(props, ...args) {
           })
         }
 
-        //if(currentUser){
-        //  history.push("/");
-        //}
+        
     }
   }
 
@@ -70,20 +66,7 @@ constructor(props, ...args) {
         email:this.state.email,
         password:this.state.password
        };
-      /*firebase
-        .auth()
-        .signInWithEmailAndPassword(this.state.email, this.state.password)
-        .then(signedInUser => {
-          console.log(signedInUser);
-        })
-        .catch(err => {
-          console.error(err);
-          this.setState({
-            errors: this.state.errors.concat(err),
-            loading: false
-          });
-        });*/
-        this.props.signInEmail(userInfo);
+      this.props.signInEmail(userInfo);
     }
   };
 
@@ -106,9 +89,7 @@ constructor(props, ...args) {
             <Icon name="code branch" color="violet" />
             Login to Cell Network
           </Header>
-          <GoogleAuth />                       
-          <br/>
-          <br/>
+
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input

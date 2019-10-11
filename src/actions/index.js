@@ -2,7 +2,12 @@ import * as actionTypes from './types';
 import firebase from '../firebase';
 import md5 from 'md5';
 
+// For now removed Social Login , need to be implemented in MVP 2
+// Tested Google Auth  add <GoogleAuth/> in Login Page to check functionality
+// Need to check Email and Social SignIn Flow
+
 export const signInGoogle = (userProfile) =>async dispatch =>{
+
     let usersRef = firebase.database().ref('users'); 
 
     await usersRef.child(userProfile.userId).set({
@@ -43,10 +48,22 @@ export const signInEmail = (userProfile) =>async dispatch =>{
     
 }
 
-export const signOutGoogle = () =>{
+export const signOutGoogle = () => {
     return {
         type:actionTypes.SIGN_OUT_GOOGLE
     };
+}
+
+export const signOutEmail = () => dispatch => {
+    firebase
+        .auth()
+        .signOut()
+        .then(()=> {
+                dispatch ({
+                    type:actionTypes.SIGN_OUT_EMAIL
+                })
+              }
+         );
 }
 
 export const setUser = user =>{
