@@ -104,3 +104,73 @@ export const createUserWithEmailPassword = (createUser) =>  async dispatch  => {
             
 
 };
+
+
+/* Channel Actions */
+export const setCurrentChannel = channel => {
+    return {
+      type: actionTypes.SET_CURRENT_CHANNEL,
+      payload: {
+        currentChannel: channel
+      }
+    }
+  }
+
+export const channelStartListener = () =>  async dispatch  =>{
+
+     let channelsRef= firebase.database().ref("channels");
+
+     channelsRef.on("child_added", snap => {
+        dispatch ({
+            type:actionTypes.CREATE_CHANNEL_LISTENER,
+            payload:snap.val()
+        }); 
+      });
+     
+
+}  
+
+export const channelStopListener = () =>  dispatch  =>{
+    let channelsRef= firebase.database().ref("channels");
+    channelsRef.off();
+    dispatch ({
+        type:actionTypes.STOP_CHANNEL_LISTENER,
+        payload:'Listener Stopped'
+    }); 
+
+}  
+
+export const createChannel = (channelData) =>  async dispatch  =>{
+
+    let channelsRef= firebase.database().ref("channels");
+   
+    const { channelName, channelDetails, user } = channelData;
+
+    const key = channelsRef.push().key;
+
+    const newChannel = {
+      id: key,
+      name: channelName,
+      details: channelDetails,
+      createdBy: {
+        name: user.displayName,
+        avatar: user.photoURL
+      }
+    };
+
+    await channelsRef
+      .child(key)
+      .update(newChannel)
+      .then(() => {
+        dispatch ({
+            type:actionTypes.CREATE_CHANNEL,
+            payload:'Channel Added'
+        }); 
+      })
+      .catch(err => {
+        dispatch ({
+            type:actionTypes.ADD_ERROR,
+            error:err
+           });  
+      });
+}  

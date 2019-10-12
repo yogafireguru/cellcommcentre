@@ -34,14 +34,14 @@ class Root extends React.Component{
                 this.props.setUser(user);
                 history.push('/');
             } else {
-                history.push('/login');
                 this.props.signOutEmail();
+                history.push('/login');
             }
         })
     }
 
     render(){
-    return this.props.isLoading ? <Spinner/> : (
+    return this.props.isLoading ? <Spinner content="Preparing Cell Network..."/> : (
             <Router history={history}>
                 <Switch>
                     <Route exact path={ROUTES.HOME} component={App} />

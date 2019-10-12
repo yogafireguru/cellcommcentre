@@ -10,7 +10,9 @@ import './App.css';
 const App = ({currentUser}) =>{
   return (
           <Grid columns="equal" className="app" style={{background: '#eee'}}> 
-            <SidePanel currentUser={currentUser}/>
+           
+              <SidePanel currentUser={currentUser}/>
+ 
             <Grid.Column style={{marginLeft: 320}}>
               <Messages />
             </Grid.Column>
