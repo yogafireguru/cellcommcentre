@@ -135,7 +135,7 @@ export const channelStopListener = () =>  dispatch  =>{
     channelsRef.off();
     dispatch ({
         type:actionTypes.STOP_CHANNEL_LISTENER,
-        payload:'Listener Stopped'
+        payload:'Channel Listener Stopped'
     }); 
 
 }  
@@ -173,4 +173,66 @@ export const createChannel = (channelData) =>  async dispatch  =>{
             error:err
            });  
       });
+}  
+
+
+/*Messages Action*/
+
+export const messagesStartListener = (channelId) =>  async dispatch  =>{
+
+    let messagesRef= firebase.database().ref("messages").child(channelId).limitToLast(10000);
+
+    messagesRef.on("child_added", snap => {
+       dispatch ({
+           type:actionTypes.CREATE_MESSAGE_LISTENER,
+           payload:snap.val()
+       }); 
+     });
+    
+
+}  
+
+export const messagesStopListener = (channelId) =>  dispatch  =>{
+   let messagesRef= firebase.database().ref("messages");
+   messagesRef.child(channelId).off();
+   dispatch ({
+       type:actionTypes.STOP_MESSAGE_LISTENER,
+       payload:'Message Listener Stopped'
+   }); 
+
+}
+
+
+export const createMessage = (user,channel,messageContent) =>  async dispatch  =>{
+
+    let messagesRef= firebase.database().ref("messages");
+
+    let message = {
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        user: {
+          id: user.uid,
+          name: user.displayName,
+          avatar: user.photoURL
+        },
+        content: messageContent
+      };
+
+      await messagesRef
+      .child(channel.id)
+      .push()
+      .set(message)
+      .then(() => {
+            dispatch ({
+                type:actionTypes.CREATE_MESSAGE,
+                payload:'Message Added'
+            }); 
+        })
+      .catch(err => {
+            dispatch ({
+                type:actionTypes.ADD_ERROR,
+                error:err
+            });  
+      });
+
+
 }  
