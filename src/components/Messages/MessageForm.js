@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { createMessage } from "../../actions";
+import { createMessage,uploadFile } from "../../actions";
 import { Segment, Button, Input } from "semantic-ui-react";
+import FileModal from './FileModal';
 
 class MessageForm extends React.Component {
   state = {
@@ -9,8 +10,14 @@ class MessageForm extends React.Component {
     channel: this.props.currentChannel,
     user: this.props.currentUser,
     loading: false,
-    errors: []
+    errors: [],
+    modal:false  
   };
+
+  openModal = () => this.setState({modal:true}); 
+  closeModal = () => this.setState({modal:false}); 
+
+
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -27,8 +34,12 @@ class MessageForm extends React.Component {
     }
   };
 
+  uploadFile = (file, metadata) => {
+    this.props.uploadFile(this.state.user,this.state.channel,file,metadata);
+  };
+
   render() {
-    const { message, loading } = this.state;
+    const { message, loading,modal } = this.state;
 
     return (
       <Segment className="message__form">
@@ -52,10 +63,16 @@ class MessageForm extends React.Component {
             icon="edit"
           />
           <Button
+           onClick={this.openModal}
             color="teal"
             content="Upload Media"
             labelPosition="right"
             icon="cloud upload"
+          />
+          <FileModal 
+           modal={modal}
+           closeModal={this.closeModal}
+           uploadFile={this.uploadFile}
           />
         </Button.Group>
       </Segment>
@@ -64,9 +81,9 @@ class MessageForm extends React.Component {
 }
 
 const mapStateToProps = (state) =>{
-  return {error:state.errors.error}
+  return {percentUploaded:state.messages.percentUploaded,error:state.errors.error}
 }
 
 export default connect(
-  mapStateToProps,{ createMessage }
+  mapStateToProps,{ createMessage,uploadFile }
 )(MessageForm);

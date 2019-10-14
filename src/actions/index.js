@@ -1,6 +1,7 @@
 import * as actionTypes from './types';
 import firebase from '../firebase';
 import md5 from 'md5';
+import uuidv4 from "uuid/v4";
 
 // For now removed Social Login , need to be implemented in MVP 2
 // Tested Google Auth  add <GoogleAuth/> in Login Page to check functionality
@@ -203,7 +204,7 @@ export const messagesStopListener = (channelId) =>  dispatch  =>{
 }
 
 
-export const createMessage = (user,channel,messageContent) =>  async dispatch  =>{
+export const createMessage = (user,channel,messageContent,fileUrl = null) =>  async dispatch  =>{
 
     let messagesRef= firebase.database().ref("messages");
 
@@ -213,9 +214,14 @@ export const createMessage = (user,channel,messageContent) =>  async dispatch  =
           id: user.uid,
           name: user.displayName,
           avatar: user.photoURL
-        },
-        content: messageContent
+        }
       };
+
+      if (fileUrl !== null) {
+        message["image"] = fileUrl;
+      } else {
+        message["content"] = messageContent;
+      }
 
       await messagesRef
       .child(channel.id)
@@ -236,3 +242,60 @@ export const createMessage = (user,channel,messageContent) =>  async dispatch  =
 
 
 }  
+
+/* File Upload*/
+
+export const uploadFile = (user, channel,file,metadata) =>  async dispatch  =>{
+    const pathToUpload = channel.id;
+    const filePath = `chat/public/${uuidv4()}.jpg`;
+    const storageRef= firebase.storage().ref();
+
+    let uploadTask=storageRef.child(filePath).put(file, metadata);
+
+    uploadTask.on(
+        "state_changed",
+        snap => {
+          const percentUploaded = Math.round(
+            (snap.bytesTransferred / snap.totalBytes) * 100
+          );
+
+          dispatch ({
+            type:actionTypes.PERCENT_UPLOAD,
+            payload:percentUploaded
+         }); 
+        },
+        err => {
+            dispatch ({
+                type:actionTypes.ADD_ERROR,
+                error:err
+            });  
+        },
+        () => {
+          uploadTask.snapshot.ref
+            .getDownloadURL()
+            .then(downloadUrl => {
+              firebase.database().ref("messages")
+                .child(pathToUpload)
+                .push()
+                .set(dispatch(createMessage(user,channel,null,downloadUrl)))
+                .then(() => {
+                    console.log("File Uploaded");
+                })
+                .catch(err => {
+                    dispatch ({
+                        type:actionTypes.ADD_ERROR,
+                        error:err
+                    });  
+                });   
+            })
+            .catch(err => {
+                dispatch ({
+                    type:actionTypes.ADD_ERROR,
+                    error:err
+                });  
+            });
+        }
+      );
+
+
+}

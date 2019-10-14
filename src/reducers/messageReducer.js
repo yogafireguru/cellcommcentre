@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/types';
 
 const initialMessagesState = {
-    messages:[]
+    messages:[],
+    percentUploaded:0
  };
   
   const messages_reducer = (state = initialMessagesState, action) => {
@@ -14,6 +15,10 @@ const initialMessagesState = {
        return {
               ...state,messages:[]
             };  
+      case actionTypes.PERCENT_UPLOAD:
+          return {
+            ...state,percentUploaded:action.payload
+          };  
       case actionTypes.CREATE_MESSAGE:
         return state;        
       default:

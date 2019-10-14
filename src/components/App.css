@@ -28,3 +28,7 @@ body,
     padding-left: 8px;
   }
   
+.message__image {
+    padding: 1em;
+}
+  
