@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { createMessage,uploadFile } from "../../actions";
 import { Segment, Button, Input } from "semantic-ui-react";
 import FileModal from './FileModal';
+import ProgressBar from "./ProgressBar";
 
 class MessageForm extends React.Component {
   state = {
@@ -69,19 +70,27 @@ class MessageForm extends React.Component {
             labelPosition="right"
             icon="cloud upload"
           />
-          <FileModal 
+         
+        </Button.Group>
+
+        <FileModal 
            modal={modal}
            closeModal={this.closeModal}
            uploadFile={this.uploadFile}
           />
-        </Button.Group>
+
+        <ProgressBar
+          uploadState={this.props.uploadState}
+          percentUploaded={this.props.percentUploaded}
+        />
+
       </Segment>
     );
   }
 }
 
 const mapStateToProps = (state) =>{
-  return {percentUploaded:state.messages.percentUploaded,error:state.errors.error}
+  return {percentUploaded:state.messages.percentUploaded,uploadState:state.messages.uploadState,error:state.errors.error}
 }
 
 export default connect(

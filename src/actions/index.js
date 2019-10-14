@@ -263,6 +263,11 @@ export const uploadFile = (user, channel,file,metadata) =>  async dispatch  =>{
             type:actionTypes.PERCENT_UPLOAD,
             payload:percentUploaded
          }); 
+
+         dispatch ({
+            type:actionTypes.UPLOAD_STATUS,
+            payload:"uploading"
+         });
         },
         err => {
             dispatch ({
@@ -279,7 +284,10 @@ export const uploadFile = (user, channel,file,metadata) =>  async dispatch  =>{
                 .push()
                 .set(dispatch(createMessage(user,channel,null,downloadUrl)))
                 .then(() => {
-                    console.log("File Uploaded");
+                    dispatch ({
+                        type:actionTypes.UPLOAD_STATUS,
+                        payload:"uploaded"
+                     });
                 })
                 .catch(err => {
                     dispatch ({
