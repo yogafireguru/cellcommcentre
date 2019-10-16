@@ -2,7 +2,8 @@ import * as actionTypes from '../actions/types';
 
 const initialChannelState = {
     channels:[],
-    currentChannel: null
+    currentChannel: null,
+    isPrivateChannel:false
   };
   
   const channel_reducer = (state = initialChannelState, action) => {
@@ -15,13 +16,18 @@ const initialChannelState = {
       case actionTypes.CREATE_CHANNEL_LISTENER:
             let newArray = state.channels.slice();
             newArray.splice(action.index, 0, action.payload);
-            return {channels:newArray};
+            return {...state,channels:newArray};
       case actionTypes.STOP_CHANNEL_LISTENER:  
        return {
               ...state,channels:[],currentChannel:null
             };  
       case actionTypes.CREATE_CHANNEL:
-        return state;        
+        return state;     
+      case actionTypes.SET_PRIVATE_CHANNEL:
+            return {
+              ...state,
+              isPrivateChannel: action.payload.isPrivateChannel
+            };     
       default:
         return state;
     }

@@ -108,6 +108,18 @@ export const createUserWithEmailPassword = (createUser) =>  async dispatch  => {
 
 
 /* Channel Actions */
+
+export const setPrivateChannel = isPrivateChannel => {
+    return {
+      type: actionTypes.SET_PRIVATE_CHANNEL,
+      payload: {
+        isPrivateChannel
+      }
+    };
+  };
+  
+
+
 export const setCurrentChannel = channel => {
     return {
       type: actionTypes.SET_CURRENT_CHANNEL,

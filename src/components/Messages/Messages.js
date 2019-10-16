@@ -54,12 +54,17 @@ class Messages extends React.Component {
       />
     ));
 
+  displayChannelName = channel => (channel ? `#${channel.name}` : "");
+  
+
   render() {
     const { channel, user } = this.state;
-
-    return this.props.messages.length >= 0 ? (
+    return this.props.messages.length >= 0 && this.props.uniqueUsers>=1 ? (
       <React.Fragment>
-        <MessagesHeader />
+        <MessagesHeader 
+         channelName={this.displayChannelName(channel)}
+         uniqueUsers={this.props.uniqueUsers}
+        />
 
         <Segment>
           <Comment.Group className="messages">
@@ -77,7 +82,7 @@ class Messages extends React.Component {
 }
 
 const mapStateToProps = (state) =>{
-  return {messages:state.messages.messages,error:state.errors.error}
+  return {messages:state.messages.messages,uniqueUsers:state.messages.uniqueUsers,error:state.errors.error}
 }
 
 export default connect(
