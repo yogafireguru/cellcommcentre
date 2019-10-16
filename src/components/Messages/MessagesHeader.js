@@ -5,7 +5,7 @@ class MessagesHeader extends React.Component {
 
 
   render() {
-    const { uniqueUsers,channelName } = this.props;
+    const { uniqueUsers,channelName,handleSearchChange,searchLoading } = this.props;
     const plural = uniqueUsers.length > 1 || uniqueUsers.length === 0;
     const numUniqueUsers = `${uniqueUsers} user${plural ? "s" : ""}`;
 
@@ -23,6 +23,8 @@ class MessagesHeader extends React.Component {
         {/* Channel Search Input */}
         <Header floated="right">
           <Input
+            loading={searchLoading}
+            onChange={handleSearchChange}
             size="mini"
             icon="search"
             name="searchTerm"
