@@ -105,14 +105,14 @@ class Channels extends React.Component {
 
     return this.props.channels.length !== 0 ? (
       <React.Fragment>
-        <Menu.Menu style={{ paddingBottom: "2em" }}>
+        <Menu.Menu className="menu">
           <Menu.Item>
             <span>
               <Icon name="exchange" /> CHANNELS
             </span>{" "}
             ({this.props.channels.length}) <Icon name="add" onClick={this.openModal} />
           </Menu.Item>
-          <div style={{ height: '450px', overflowY:'scroll'}}> {this.displayChannels(this.props.channels)}</div>  
+          <div style={{ height: '200px', overflowY:'scroll'}}> {this.displayChannels(this.props.channels)}</div>  
 
                    
         </Menu.Menu>

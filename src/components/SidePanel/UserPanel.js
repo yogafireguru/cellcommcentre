@@ -1,7 +1,9 @@
 import React from "react";
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
 import { Grid, Header, Icon, Dropdown,Image } from "semantic-ui-react";
-import { signOutEmail } from '../../actions'
+//import { signOutEmail } from '../../actions';
+import firebase from '../../firebase';
+
 
 
 class UserPanel extends React.Component {
@@ -9,7 +11,6 @@ class UserPanel extends React.Component {
   state = {
       user:this.props.currentUser
   }
-
 
   dropdownOptions = () => [
     {
@@ -32,13 +33,15 @@ class UserPanel extends React.Component {
   ];
 
   handleSignout = () =>{
-    this.props.signOutEmail();
+    firebase
+      .auth()
+      .signOut();
   }
 
   render() {
     const {user} = this.state;
 
-    return (
+    return  (
       <Grid style={{ background: "#4c3c4c" }}>
         <Grid.Column>
           <Grid.Row style={{ padding: "1.2em", margin: 0 }}>
@@ -66,5 +69,6 @@ class UserPanel extends React.Component {
   }
 }
 
+export default UserPanel;
 
-export default connect(null,{signOutEmail})(UserPanel);
+//export default connect(null,{signOutEmail})(UserPanel);
