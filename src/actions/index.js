@@ -360,7 +360,7 @@ export const createMessage = (user,channel,messageContent,fileUrl = null,isPriva
 
 const getPath = (isPrivateChannel,pathToUpload) => {
   if (isPrivateChannel) {
-    return `chat/private-${pathToUpload}`;
+    return `chat/private/${pathToUpload}`;
   } else {
     return "chat/public";
   }
