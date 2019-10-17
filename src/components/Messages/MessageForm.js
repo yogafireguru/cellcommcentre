@@ -8,6 +8,7 @@ import ProgressBar from "./ProgressBar";
 class MessageForm extends React.Component {
   state = {
     message: "",
+    isPrivateChannel:this.props.isPrivateChannel,
     channel: this.props.currentChannel,
     user: this.props.currentUser,
     loading: false,
@@ -19,6 +20,13 @@ class MessageForm extends React.Component {
   closeModal = () => this.setState({modal:false}); 
 
 
+  componentDidUpdate(prevProps) {
+
+    if((this.props.isPrivateChannel!== prevProps.isPrivateChannel))
+    {
+        this.setState({isPrivateChannel:this.props.isPrivateChannel});
+    }
+  }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -27,21 +35,20 @@ class MessageForm extends React.Component {
 
   sendMessage = () => {
     const { user,message, channel } = this.state;
-
+    const {isPrivateChannel} =this.props;
     if (message) {
       this.setState({ loading: true });
-      this.props.createMessage(user,channel,message);
+      this.props.createMessage(user,channel,message,null,isPrivateChannel);
       this.setState({ loading: false, message: "", errors: [] });
     }
   };
 
   uploadFile = (file, metadata) => {
-    this.props.uploadFile(this.state.user,this.state.channel,file,metadata);
+    this.props.uploadFile(this.state.user,this.state.channel,file,metadata,this.props.isPrivateChannel);
   };
 
   render() {
     const { message, loading,modal } = this.state;
-
     return (
       <Segment className="message__form">
         <Input
@@ -91,7 +98,7 @@ class MessageForm extends React.Component {
 }
 
 const mapStateToProps = (state) =>{
-  return {percentUploaded:state.messages.percentUploaded,uploadState:state.messages.uploadState,error:state.errors.error}
+  return {percentUploaded:state.messages.percentUploaded,uploadState:state.messages.uploadState,isPrivateChannel:state.channel.isPrivateChannel,error:state.errors.error}
 }
 
 export default connect(

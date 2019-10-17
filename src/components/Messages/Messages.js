@@ -12,6 +12,7 @@ import Message from "./Message";
 
 class Messages extends React.Component {
   state = {
+    isPrivateChannel:this.props.isPrivateChannel,
     channel: this.props.currentChannel,
     user: this.props.currentUser,
     searchTerm:'',
@@ -20,31 +21,31 @@ class Messages extends React.Component {
   };
 
   componentDidMount() {
-    const { channel, user } = this.state;
+    const { channel, user,isPrivateChannel } = this.state;
 
     if (channel && user) {
-      this.addListeners(channel.id);
+      this.addListeners(channel.id,isPrivateChannel);
     }
   }
 
-  addListeners = channelId => {
-    this.addMessageListener(channelId);
+  addListeners = (channelId,isPrivateChannel) => {
+    this.addMessageListener(channelId,isPrivateChannel);
   };
 
-  addMessageListener = channelId => {
-    this.props.messagesStartListener(channelId);
+  addMessageListener = (channelId,isPrivateChannel) => {
+    this.props.messagesStartListener(channelId,isPrivateChannel);
   };
 
   componentWillUnmount() {
-    const { channel } = this.state;
+    const { channel,isPrivateChannel } = this.state;
 
     if (channel) {
-      this.removeListeners(channel.id);
+      this.removeListeners(channel.id,isPrivateChannel);
     }
   }
 
-  removeListeners = (channelId) => {
-   this.props.messagesStopListener(channelId);
+  removeListeners = (channelId,isPrivateChannel) => {
+   this.props.messagesStopListener(channelId,isPrivateChannel);
   };
 
   displayMessages = messages =>
@@ -57,7 +58,11 @@ class Messages extends React.Component {
       />
     ));
 
-  displayChannelName = channel => (channel ? `#${channel.name}` : "");
+    displayChannelName = channel => {
+      return channel
+        ? `${this.state.privateChannel ? "@" : "#"}${channel.name}`
+        : "";
+    };
   
   handleSearchChange = event =>{
     this.setState({
@@ -83,7 +88,7 @@ class Messages extends React.Component {
   };
 
   render() {
-    const { channel, user,searchTerm, searchResults, searchLoading } = this.state;
+    const { channel, user,searchTerm, searchResults, searchLoading,isPrivateChannel } = this.state;
     return this.props.messages.length >= 0 && this.props.uniqueUsers>=1 ? (
       <React.Fragment>
         <MessagesHeader 
@@ -91,6 +96,7 @@ class Messages extends React.Component {
          uniqueUsers={this.props.uniqueUsers}
          handleSearchChange={this.handleSearchChange}
          searchLoading={searchLoading}
+         isPrivateChannel={isPrivateChannel}
         />
 
         <Segment>
@@ -102,6 +108,7 @@ class Messages extends React.Component {
         <MessageForm
           currentChannel={channel}
           currentUser={user}
+          isPrivateChannel={isPrivateChannel}
         />
       </React.Fragment>
     ):<Spinner content="Loading Messages..."/> ;

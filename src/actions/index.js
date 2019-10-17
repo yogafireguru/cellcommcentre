@@ -287,9 +287,13 @@ export const createChannel = (channelData) =>  async dispatch  =>{
 
 /*Messages Action*/
 
-export const messagesStartListener = (channelId) =>  async dispatch  =>{
+const getMessagesRef = (isPrivateChannel) => {
+  return isPrivateChannel ? "privateMessages" : "messages";
+};
 
-    let messagesRef= firebase.database().ref("messages").child(channelId).limitToLast(10000);
+export const messagesStartListener = (channelId,isPrivateChannel) =>  async dispatch  =>{
+
+    let messagesRef= firebase.database().ref(getMessagesRef(isPrivateChannel)).child(channelId).limitToLast(10000);
 
     messagesRef.on("child_added", snap => {
        dispatch ({
@@ -301,8 +305,8 @@ export const messagesStartListener = (channelId) =>  async dispatch  =>{
 
 }  
 
-export const messagesStopListener = (channelId) =>  dispatch  =>{
-   let messagesRef= firebase.database().ref("messages");
+export const messagesStopListener = (channelId,isPrivateChannel) =>  dispatch  =>{
+   let messagesRef= firebase.database().ref(getMessagesRef(isPrivateChannel));
    messagesRef.child(channelId).off();
    dispatch ({
        type:actionTypes.STOP_MESSAGE_LISTENER,
@@ -312,9 +316,10 @@ export const messagesStopListener = (channelId) =>  dispatch  =>{
 }
 
 
-export const createMessage = (user,channel,messageContent,fileUrl = null) =>  async dispatch  =>{
+export const createMessage = (user,channel,messageContent,fileUrl = null,isPrivateChannel) =>  async dispatch  =>{
 
-    let messagesRef= firebase.database().ref("messages");
+  console.log(isPrivateChannel);
+    let messagesRef= firebase.database().ref(getMessagesRef(isPrivateChannel));
 
     let message = {
         timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -353,9 +358,20 @@ export const createMessage = (user,channel,messageContent,fileUrl = null) =>  as
 
 /* File Upload*/
 
-export const uploadFile = (user, channel,file,metadata) =>  async dispatch  =>{
+const getPath = (isPrivateChannel,pathToUpload) => {
+  if (isPrivateChannel) {
+    return `chat/private-${pathToUpload}`;
+  } else {
+    return "chat/public";
+  }
+};
+
+export const uploadFile = (user, channel,file,metadata,isPrivateChannel) =>  async dispatch  =>{
     const pathToUpload = channel.id;
-    const filePath = `chat/public/${uuidv4()}.jpg`;
+    //const filePath = `chat/public/${uuidv4()}.jpg`;
+    const filePath = `${getPath(isPrivateChannel,pathToUpload)}/${uuidv4()}.jpg`;
+
+
     const storageRef= firebase.storage().ref();
 
     let uploadTask=storageRef.child(filePath).put(file, metadata);
@@ -387,10 +403,10 @@ export const uploadFile = (user, channel,file,metadata) =>  async dispatch  =>{
           uploadTask.snapshot.ref
             .getDownloadURL()
             .then(downloadUrl => {
-              firebase.database().ref("messages")
+              firebase.database().ref(getMessagesRef(isPrivateChannel))
                 .child(pathToUpload)
                 .push()
-                .set(dispatch(createMessage(user,channel,null,downloadUrl)))
+                .set(dispatch(createMessage(user,channel,null,downloadUrl,isPrivateChannel)))
                 .then(() => {
                     dispatch ({
                         type:actionTypes.UPLOAD_STATUS,

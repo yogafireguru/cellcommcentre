@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { setCurrentChannel,channelStartListener,channelStopListener,createChannel } from "../../actions";
+import { setCurrentChannel,setPrivateChannel,channelStartListener,channelStopListener,createChannel } from "../../actions";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
 import Spinner from '../../Spinner';
 
@@ -73,6 +73,7 @@ class Channels extends React.Component {
   changeChannel = channel => {
     this.setActiveChannel(channel);
     this.props.setCurrentChannel(channel);
+    this.props.setPrivateChannel(false);
   };
 
   setActiveChannel = channel => {
@@ -162,5 +163,5 @@ const mapStateToProps = (state) =>{
 
 export default connect(
     mapStateToProps,
-  { setCurrentChannel,channelStartListener,channelStopListener,createChannel }
+  { setCurrentChannel,setPrivateChannel,channelStartListener,channelStopListener,createChannel }
 )(Channels);

@@ -5,7 +5,7 @@ class MessagesHeader extends React.Component {
 
 
   render() {
-    const { uniqueUsers,channelName,handleSearchChange,searchLoading } = this.props;
+    const { uniqueUsers,channelName,handleSearchChange,searchLoading,isPrivateChannel } = this.props;
     const plural = uniqueUsers.length > 1 || uniqueUsers.length === 0;
     const numUniqueUsers = `${uniqueUsers} user${plural ? "s" : ""}`;
 
@@ -15,7 +15,7 @@ class MessagesHeader extends React.Component {
         <Header fluid="true" as="h2" floated="left" style={{ marginBottom: 0 }}>
           <span>
             {channelName}
-            <Icon name={"star outline"} color="black" />
+            {!isPrivateChannel && <Icon name={"star outline"} color="black" />}
           </span>
           <Header.Subheader>{numUniqueUsers}</Header.Subheader>
         </Header>

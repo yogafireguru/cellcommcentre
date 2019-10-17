@@ -2,11 +2,12 @@ import React from "react";
 //import firebase from "../../firebase";
 import { Menu, Icon } from "semantic-ui-react";
 import { connect } from 'react-redux';
-import { usersStartListener,usersStopListener,createUserPresence,userPresenceStartListener,userPresenceStopListener } from '../../actions';
+import { usersStartListener,usersStopListener,createUserPresence,userPresenceStartListener,userPresenceStopListener,setCurrentChannel, setPrivateChannel  } from '../../actions';
 
 
 class DirectMessages extends React.Component {
   state = {
+    activeChannel: "",
     user: this.props.currentUser,
     showUsers:[]
   };
@@ -52,8 +53,30 @@ class DirectMessages extends React.Component {
 
   isUserOnline = user => user.status === "online";
 
+  changeChannel = user => {
+    const channelId = this.getChannelId(user.uid);
+    const channelData = {
+      id: channelId,
+      name: user.name
+    };
+    this.props.setCurrentChannel(channelData);
+    this.props.setPrivateChannel(true);
+    this.setActiveChannel(user.uid);
+  };
+
+  getChannelId = userId => {
+    const currentUserId = this.state.user.uid;
+    return userId < currentUserId
+      ? `${userId}/${currentUserId}`
+      : `${currentUserId}/${userId}`;
+  };
+
+  setActiveChannel = userId => {
+    this.setState({ activeChannel: userId });
+  };
+
   render() {
-    const { showUsers } = this.state;
+    const { showUsers,activeChannel } = this.state;
 
     return (
       <Menu.Menu className="menu">
@@ -67,7 +90,8 @@ class DirectMessages extends React.Component {
         {showUsers.map(user => (
           <Menu.Item
             key={user.uid}
-            onClick={() => console.log(user)}
+            active={user.uid === activeChannel}
+            onClick={() => this.changeChannel(user)}
             style={{ opacity: 0.7, fontStyle: "italic" }}
           >
             <Icon
@@ -88,4 +112,4 @@ const mapStateToProps = (state) =>{
     return {users:state.user.users,connectedUsers:state.user.connectedUsers,error:state.errors.error}
 }
 
-export default connect(mapStateToProps,{usersStartListener,usersStopListener,createUserPresence,userPresenceStartListener,userPresenceStopListener})(DirectMessages);
+export default connect(mapStateToProps,{usersStartListener,usersStopListener,createUserPresence,userPresenceStartListener,userPresenceStopListener,setCurrentChannel, setPrivateChannel })(DirectMessages);
